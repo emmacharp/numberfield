@@ -93,23 +93,27 @@
 		public function displayPublishPanel(XMLElement &$wrapper, $data = null, $flagWithError = null, $fieldnamePrefix = null, $fieldnamePostfix = null, $entry_id = null){
 
 			$value = $data['value'];
-			$label = Widget::Label($this->get('label'));
+			$label = Widget::Label();
+			$span = new XMLElement('span', $this->get('label'));
+			$label->appendChild($span);
+
 			if($this->get('required') != 'yes') {
 				$label->appendChild(new XMLElement('i', __('Optional')));
 			}
-			$label->appendChild(
+			
+
+			if($flagWithError != null) {
+				$label = Widget::Error($label, $flagWithError);
+			}
+
+			$wrapper->appendChild($label);
+			$wrapper->appendChild(
 				Widget::Input(
 					'fields'.$fieldnamePrefix.'['.$this->get('element_name').']'.$fieldnamePostfix,
 					(strlen($value) != 0 ? $value : null)
 				)
 			);
 
-			if($flagWithError != null) {
-				$wrapper->appendChild(Widget::Error($label, $flagWithError));
-			}
-			else {
-				$wrapper->appendChild($label);
-			}
 		}
 
 		public function checkPostFieldData($data, &$message, $entry_id = null) {
